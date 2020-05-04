@@ -1,4 +1,6 @@
 #include "wrapper.h"
+#include <random>
+
 
 double randDouble(){
 
@@ -9,7 +11,6 @@ double randDouble(){
   return ret;
 
 }
-
 
 int main(){
 

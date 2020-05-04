@@ -2,7 +2,7 @@
 #define BOX2D_SDL2_WRAPPER
 
 #include "include/box2d/box2d.h"
-#include <random>
+#include <string>
 #include <iostream>
 #include <vector>
 #include <SDL2/SDL.h>
