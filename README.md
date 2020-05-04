@@ -1,7 +1,7 @@
 # Simple Box2D and SDL2 wrapper
 
 ## Dependencies
-* Box2D (Headers already in include/ and static library already in lib/)
+* Box2D (Headers already in `include/` and static library already in `lib/`)
 * SDL2
 
 ## Compile on Linux
