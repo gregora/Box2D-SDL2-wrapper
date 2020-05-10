@@ -51,7 +51,6 @@ SDL_Texture* PhysicsObject::createTexture(std::string path, SDL_Renderer* render
   texture_scalex = scalex;
   texture_scaley = scaley;
 
-  //const char img_path[8] = *path;
   const char *cstr = path.c_str();
   texture = IMG_LoadTexture(renderer, cstr);
   return texture;
@@ -97,7 +96,7 @@ Display::Display(int w, int h, char title[], float pixelspermeter){
       SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
     );
 
-  renderer =  SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+  renderer =  SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
   SDL_GetWindowSize(window, &window_width, &window_height);
 
@@ -154,8 +153,8 @@ void Display::render(){
     SDL_QueryTexture(texture, nullptr, nullptr, &tex_width, &tex_height);
 
     SDL_Rect pl;
-    pl.w = tex_width * tex.texture_scalex * ppm/10;
-    pl.h = tex_height * tex.texture_scaley * ppm/10;
+    pl.w = tex_width * tex.texture_scalex;
+    pl.h = tex_height * tex.texture_scaley;
     pl.x = tex.x - pl.w/2 + window_width/2;
     pl.y = -tex.y - pl.h/2 + window_height/2;
 
@@ -164,8 +163,6 @@ void Display::render(){
     SDL_RenderCopyEx(renderer, texture, NULL, &pl, tex.rotation, NULL, SDL_FLIP_NONE);
 
   }
-
-
 
 
 
@@ -181,12 +178,11 @@ void Display::render(){
 
     float *ptr = ob.getPosition();
     float pos[] = {*ptr, *(ptr + 1), *(ptr + 2)};
-
     SDL_Rect pl;
     pl.w = tex_width * ob.texture_scalex * ppm/10;
     pl.h = tex_height * ob.texture_scaley * ppm/10;
-    pl.x = pos[0]*ppm - pl.w/2 + window_width/2;
-    pl.y = -pos[1]*ppm - pl.h/2 + window_height/2;
+    pl.x = pos[0]*ppm - pl.w/2 + window_width/2 - camerax*ppm;
+    pl.y = -pos[1]*ppm - pl.h/2 + window_height/2 + cameray*ppm;
 
 
     SDL_SetRenderTarget(renderer, NULL);
@@ -207,8 +203,8 @@ void Display::render(){
     SDL_QueryTexture(texture, nullptr, nullptr, &tex_width, &tex_height);
 
     SDL_Rect pl;
-    pl.w = tex_width * tex.texture_scalex * ppm/10;
-    pl.h = tex_height * tex.texture_scaley * ppm/10;
+    pl.w = tex_width * tex.texture_scalex;
+    pl.h = tex_height * tex.texture_scaley;
     pl.x = tex.x - pl.w/2 + window_width/2;
     pl.y = -tex.y - pl.h/2 + window_height/2;
 
@@ -254,9 +250,12 @@ void Display::addTexture(DisplayTexture* texture, bool background){
 }
 
 
+//DisplayTexture ignores camera x and y
+DisplayTexture::DisplayTexture(std::string path, SDL_Renderer* renderer, float scalex, float scaley){
 
-DisplayTexture::DisplayTexture(){
-
-
+  texture_scalex = scalex;
+  texture_scaley = scaley;
+  const char *cstr = path.c_str();
+  texture = IMG_LoadTexture(renderer, cstr);
 
 }

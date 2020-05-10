@@ -26,7 +26,7 @@ class PhysicsObject {
     b2Body* body = nullptr;
 
 
-    PhysicsObject(b2World *world, float x, float y, float w, float h, float d = 1.0f, float f = 1.0f);
+    PhysicsObject(b2World *world, float x = 0.0f, float y = 0.0f, float w = 0.5f, float = 0.5f, float d = 1.0f, float f = 1.0f);
 
     void setAsPolygon(b2PolygonShape polygon, float d = 1.0f, float f = 1.0f);
 
@@ -54,7 +54,7 @@ class DisplayTexture {
     int y = 0;
     float rotation = 0.0f;
 
-    DisplayTexture();
+    DisplayTexture(std::string path = "", SDL_Renderer* renderer = nullptr, float scalex = 1, float scaley = 1);
 
 };
 
@@ -68,6 +68,9 @@ class Display {
     int window_width;
     int window_height;
     float ppm;
+
+    float camerax = 0;
+    float cameray = 0;
 
     std::vector<PhysicsObject*> objects;
     std::vector<DisplayTexture*> background_textures;
