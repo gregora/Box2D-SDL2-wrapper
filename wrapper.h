@@ -7,6 +7,7 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 
 
@@ -50,8 +51,8 @@ class DisplayTexture {
     float texture_scalex = 1;
     float texture_scaley = 1;
 
-    int x = 0;
-    int y = 0;
+    float x = 0;
+    float y = 0;
     float rotation = 0.0f;
 
     DisplayTexture(std::string path = "", SDL_Renderer* renderer = nullptr, float scalex = 1, float scaley = 1);
@@ -72,11 +73,13 @@ class Display {
     float camerax = 0;
     float cameray = 0;
 
+    bool fullscreen = false;
+
     std::vector<PhysicsObject*> objects;
     std::vector<DisplayTexture*> background_textures;
     std::vector<DisplayTexture*> foreground_textures;
 
-    Display(int w, int h, char title[], float pixelspermeter = 10);
+    Display(int w, int h, char title[], float pixelspermeter);
 
     void render();
 
@@ -85,6 +88,8 @@ class Display {
     void addObject(PhysicsObject* obj);
 
     void addTexture(DisplayTexture* texture, bool background = false);
+
+    void setFullscreen(bool set = true);
 
 };
 

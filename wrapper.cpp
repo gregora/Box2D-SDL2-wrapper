@@ -85,16 +85,21 @@ Display::Display(int w, int h, char title[], float pixelspermeter){
 
   window_width = w;
   window_height = h;
+
   ppm = pixelspermeter;
+
 
   window = SDL_CreateWindow(
       tit,
       SDL_WINDOWPOS_UNDEFINED,
       SDL_WINDOWPOS_UNDEFINED,
-      w,
-      h,
+      window_width,
+      window_height,
       SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
     );
+
+
+  //SDL_SetWindowFullscreen(window, 0);
 
   renderer =  SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
@@ -246,6 +251,31 @@ void Display::addTexture(DisplayTexture* texture, bool background){
     foreground_textures.push_back(texture);
   }
 
+
+}
+
+void Display::setFullscreen(bool set){
+
+  fullscreen = set;
+
+  if(set){
+    SDL_DisplayMode DM;
+    SDL_GetCurrentDisplayMode(0, &DM);
+    window_width = DM.w;
+    window_height = DM.h;
+
+    SDL_SetWindowSize(window, window_width, window_height);
+    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+
+  }else{
+
+    window_width = 1000;
+    window_height = 600;
+
+    SDL_SetWindowFullscreen(window, 0);
+    SDL_SetWindowSize(window, window_width, window_height);
+
+  }
 
 }
 
