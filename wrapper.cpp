@@ -99,9 +99,8 @@ Display::Display(int w, int h, char title[], float pixelspermeter){
     );
 
 
-  //SDL_SetWindowFullscreen(window, 0);
-
   renderer =  SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
 
   SDL_GetWindowSize(window, &window_width, &window_height);
 
@@ -158,10 +157,10 @@ void Display::render(){
     SDL_QueryTexture(texture, nullptr, nullptr, &tex_width, &tex_height);
 
     SDL_Rect pl;
-    pl.w = tex_width * tex.texture_scalex;
-    pl.h = tex_height * tex.texture_scaley;
-    pl.x = tex.x - pl.w/2 + window_width/2;
-    pl.y = -tex.y - pl.h/2 + window_height/2;
+    pl.w = tex_width * tex.texture_scalex * ppm/10;
+    pl.h = tex_height * tex.texture_scaley * ppm/10;
+    pl.x = tex.x*ppm - pl.w/2 + window_width/2;
+    pl.y = -tex.y*ppm - pl.h/2 + window_height/2;
 
 
     SDL_SetRenderTarget(renderer, NULL);
@@ -208,10 +207,10 @@ void Display::render(){
     SDL_QueryTexture(texture, nullptr, nullptr, &tex_width, &tex_height);
 
     SDL_Rect pl;
-    pl.w = tex_width * tex.texture_scalex;
-    pl.h = tex_height * tex.texture_scaley;
-    pl.x = tex.x - pl.w/2 + window_width/2;
-    pl.y = -tex.y - pl.h/2 + window_height/2;
+    pl.w = tex_width * tex.texture_scalex * ppm/10;
+    pl.h = tex_height * tex.texture_scaley * ppm/10;
+    pl.x = tex.x*ppm - pl.w/2 + window_width/2;
+    pl.y = -tex.y*ppm - pl.h/2 + window_height/2;
 
 
     SDL_SetRenderTarget(renderer, NULL);
@@ -246,6 +245,7 @@ void Display::addObject(PhysicsObject* obj){
 void Display::addTexture(DisplayTexture* texture, bool background){
 
   if(background){
+    SDL_SetTextureBlendMode(texture -> texture, SDL_BLENDMODE_BLEND);
     background_textures.push_back(texture);
   }else{
     foreground_textures.push_back(texture);
