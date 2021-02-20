@@ -138,7 +138,7 @@ void Display::loadingScreen(std::string path){
 
 }
 
-void Display::render(){
+void Display::render(bool to_screen){
 
   SDL_GetWindowSize(window, &window_width, &window_height);
 
@@ -181,7 +181,7 @@ void Display::render(){
 
 
     float *ptr = ob.getPosition();
-    float pos[] = {*ptr, *(ptr + 1), *(ptr + 2)};
+    float pos[] = {ptr[0], ptr[1], ptr[2]};
     SDL_Rect pl;
     pl.w = tex_width * ob.texture_scalex * ppm/10;
     pl.h = tex_height * ob.texture_scaley * ppm/10;
@@ -220,9 +220,11 @@ void Display::render(){
 
 
 
-  SDL_SetRenderTarget(renderer, NULL);
+  SDL_SetRenderTarget(renderer, NULL); //set render target back to the renderer
 
-  SDL_RenderPresent(renderer);
+  if(to_screen){
+    SDL_RenderPresent(renderer);//render the frame    
+  }
 
   //close on x
   SDL_Event e;
@@ -252,6 +254,46 @@ void Display::addTexture(DisplayTexture* texture, bool background){
   }
 
 
+}
+
+
+bool Display::saveScreenshotBMP(std::string filepath) {
+    SDL_Surface* saveSurface = NULL;
+    SDL_Surface* infoSurface = NULL;
+
+    SDL_Window * SDLWindow = window;
+    SDL_Renderer * SDLRenderer = renderer;
+
+    infoSurface = SDL_GetWindowSurface(SDLWindow);
+    if (infoSurface == NULL) {
+        std::cerr << "Failed to create info surface from window in saveScreenshotBMP(string), SDL_GetError() - " << SDL_GetError() << "\n";
+    } else {
+        unsigned char * pixels = new (std::nothrow) unsigned char[infoSurface->w * infoSurface->h * infoSurface->format->BytesPerPixel];
+        if (pixels == 0) {
+            std::cerr << "Unable to allocate memory for screenshot pixel data buffer!\n";
+            return false;
+        } else {
+            if (SDL_RenderReadPixels(SDLRenderer, &infoSurface->clip_rect, infoSurface->format->format, pixels, infoSurface->w * infoSurface->format->BytesPerPixel) != 0) {
+                std::cerr << "Failed to read pixel data from SDL_Renderer object. SDL_GetError() - " << SDL_GetError() << "\n";
+                delete[] pixels;
+                return false;
+            } else {
+                saveSurface = SDL_CreateRGBSurfaceFrom(pixels, infoSurface->w, infoSurface->h, infoSurface->format->BitsPerPixel, infoSurface->w * infoSurface->format->BytesPerPixel, infoSurface->format->Rmask, infoSurface->format->Gmask, infoSurface->format->Bmask, infoSurface->format->Amask);
+                if (saveSurface == NULL) {
+                    std::cerr << "Couldn't create SDL_Surface from renderer pixel data. SDL_GetError() - " << SDL_GetError() << "\n";
+                    delete[] pixels;
+                    return false;
+                }
+                SDL_SaveBMP(saveSurface, filepath.c_str());
+                SDL_FreeSurface(saveSurface);
+                saveSurface = NULL;
+            }
+            delete[] pixels;
+        }
+        SDL_FreeSurface(infoSurface);
+        infoSurface = NULL;
+    }
+    return true;
 }
 
 void Display::setFullscreen(bool set){

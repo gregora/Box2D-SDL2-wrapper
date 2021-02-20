@@ -69,7 +69,6 @@ int main(){
     world.Step(delta, 6, 2);
     (*disp1).render();
 
-
   }
 
 }

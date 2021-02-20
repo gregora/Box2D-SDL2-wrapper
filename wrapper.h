@@ -81,7 +81,7 @@ class Display {
 
     Display(int w, int h, char title[], float pixelspermeter);
 
-    void render();
+    void render(bool to_screen = true);
 
     void loadingScreen(std::string path);
 
@@ -90,6 +90,8 @@ class Display {
     void addTexture(DisplayTexture* texture, bool background = false);
 
     void setFullscreen(bool set = true);
+
+    bool saveScreenshotBMP(std::string filepath);
 
 };
 
