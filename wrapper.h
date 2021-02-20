@@ -91,7 +91,7 @@ class Display {
 
     void setFullscreen(bool set = true);
 
-    bool saveScreenshotBMP(std::string filepath);
+    bool saveFrame(std::string filepath);
 
 };
 

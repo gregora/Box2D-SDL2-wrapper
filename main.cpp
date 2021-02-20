@@ -60,15 +60,16 @@ int main(){
   Uint64 last = 0;
   float delta = 0;
 
-  while (true){
+  int count_frames = 0;
 
+  while (true){
+    count_frames ++;
     now = SDL_GetPerformanceCounter();
     delta = (now - last) / (double)SDL_GetPerformanceFrequency();
     last = now;
 
-    world.Step(delta, 6, 2);
-    (*disp1).render();
-
+    world.Step(1.0/60.0, 6, 2);
+    (*disp1).render(true);
   }
 
 }

@@ -223,7 +223,7 @@ void Display::render(bool to_screen){
   SDL_SetRenderTarget(renderer, NULL); //set render target back to the renderer
 
   if(to_screen){
-    SDL_RenderPresent(renderer);//render the frame    
+    SDL_RenderPresent(renderer);//render the frame
   }
 
   //close on x
@@ -257,7 +257,7 @@ void Display::addTexture(DisplayTexture* texture, bool background){
 }
 
 
-bool Display::saveScreenshotBMP(std::string filepath) {
+bool Display::saveFrame(std::string filepath) {
     SDL_Surface* saveSurface = NULL;
     SDL_Surface* infoSurface = NULL;
 
@@ -284,7 +284,7 @@ bool Display::saveScreenshotBMP(std::string filepath) {
                     delete[] pixels;
                     return false;
                 }
-                SDL_SaveBMP(saveSurface, filepath.c_str());
+                IMG_SavePNG(saveSurface, filepath.c_str());
                 SDL_FreeSurface(saveSurface);
                 saveSurface = NULL;
             }
